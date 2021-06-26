@@ -1,0 +1,13 @@
+.App-header {
+    color: $white;
+    padding-top: 5px;
+    font-size: 1em;
+    > .bingoScoreBoard {
+        list-style: none;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+        padding: 0;
+        text-align: center;
+    }
+}

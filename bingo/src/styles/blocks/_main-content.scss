@@ -1,0 +1,24 @@
+html{
+    font-size: 14px;
+}
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+body {
+    background-image: url(../../images/black-car-wallpaper-best.jpg);
+    background-position: top;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.Play-ground {
+    background-color: $boardBlack;
+    margin: 5vh auto;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    flex-direction: column;
+}
