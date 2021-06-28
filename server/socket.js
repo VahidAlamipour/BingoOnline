@@ -11,14 +11,12 @@ module.exports = function (io) {
             if (error) return callback(error);
             socket.join(room);
             const usersInThisRoom = Users.getUsers(room);
-            console.log(`😡`, usersInThisRoom);
             socket.emit('roomStarted', { name, roomId: room, isHost: isCreateRoom })
             io.to(room).emit('membersChanged', usersInThisRoom)
             callback();
         });
         socket.on('clickCell', ({ brand, user }, callback) => {
-            console.log("🙂", user)
-            io.to(user.room).emit('cellClicked', {brand,turnOf: Users.whoseTurnIsIt(user.room)});
+            io.to(user.room).emit('cellClicked', { brand, turnOf: Users.whoseTurnIsIt(user.room) });
         });
         socket.on('disconnec', () => {
             console.log('socket Disconnected')
@@ -30,6 +28,16 @@ module.exports = function (io) {
             io.to(roomId).emit('gameStarted', { turnOf: Users.whoseTurnIsIt(roomId) });
             callback();
         });
+        socket.on('endGame', ({ name, room }, callback) => {
+            var res = Users.addScore(name, room);
+            console.log('===> ',res);
+            io.to(room).emit('gameEnded', name);
+            callback();
+        });
+        socket.on('restartGame', (roomId, callback) => {
+            io.to(roomId).emit('gameRestarted')
+            callback();
+        })
 
     });
 }

@@ -8,7 +8,7 @@ class Users {
         } else {
             if (usersInRoom.length != 1) return { error: 'this room is not valid!!!!!!' };
         }
-        const user = { id, name, room, isHost: isCreateRoom, myTurn: false };
+        const user = { id, name, room, isHost: isCreateRoom, myTurn: false, score:0 };
         allUsers.push(user);
 
         return { user }
@@ -48,6 +48,11 @@ class Users {
         }
         allMembers[0].myTurn = true;
         return allMembers[0];
+    }
+    addScore(name,roomId){
+        let user = allUsers.find(x=>x.name == name && x.room == roomId);
+        user.score++;
+        return user;
     }
 }
 module.exports = new Users();

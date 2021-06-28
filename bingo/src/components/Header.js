@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
 function Header(props) {
-    const { headerList, point, user, members, startPlaying, gameStatus } = props;
-
+    const { headerList, point, user, members, gameStatus, winer } = props;
     return (<header className="App-header" >
-        <ul style={{ fontSize: 12 }}>
+        <ul className="room-info">
             <li>{user.room}</li>
             <li>{user.name}{user.isHost && <span>(Host)</span>}</li>
             {members && members.map(item => {
@@ -12,8 +11,10 @@ function Header(props) {
                     return <li>{item.name}{item.isHost && <span>(Host)</span>}</li>
             })}
         </ul>
-        <div>{gameStatus == 'gameStarted' ? <span>{user.isTurn ? "It's your turn" : "It's not your turn"}</span>: <span>waiting for start</span>}</div>
-        {user.isHost && gameStatus !== 'gameStarted' && <div><button onClick={()=>{startPlaying()}}>Start Game</button></div>}
+        <div className="game-status">
+            {gameStatus == 'gameStarted' ? <span>{user.isTurn ? "It's your turn" : "It's not your turn"}</span> 
+            :gameStatus == 'gameEnded' ? <span>{winer ? "You Won" : 'Game Over'}</span> : <span>waiting for start</span>}
+        </div>
         <ul className="bingoScoreBoard">
             {headerList && headerList.map((ele, index) => (<li key={ele.char}
                 style={{ width: props.size, color: (index + 1 <= point ? 'red' : '#fff') }}>{ele.char}</li>))}

@@ -64,7 +64,7 @@ function difference(a1, a2) {
 let bingoSound = null;
 
 
-function Game({ user, members, clickCell, lastBrand, startPlaying, gameStatus }) {
+function Game({ user, members, clickCell, lastBrand, startPlaying, gameStatus, endGame, winer, restartGame }) {
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
   const [brandsList, setBrandsList] = useState([]);
   const [headerList, setHeaderList] = useState([]);
@@ -75,7 +75,7 @@ function Game({ user, members, clickCell, lastBrand, startPlaying, gameStatus })
   });
   bingoSound = new Audio("/images/ding.mp3");
 
-  useEffect(() => {
+  const initFunc = () => {
     setBrandsList(shuffle());
     setHeaderList([{ char: 'B', pass: false },
     { char: 'I', pass: false },
@@ -83,14 +83,24 @@ function Game({ user, members, clickCell, lastBrand, startPlaying, gameStatus })
     { char: 'G', pass: false },
     { char: 'O', pass: false }]);
     setCheckedList(iniCheckedListMaker());
+    setPoint({
+      horizontal: [], vertical: [], diagonalUp: false,
+      diagonalDown: false, point: 0, diffArray: []
+    });
+  }
 
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
+  useEffect(() => {
+    if (gameStatus === 'gameUI') {
+      initFunc();
+      function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+      }
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
 
-  }, []);
+
+  }, [gameStatus]);
 
   useEffect(() => {
     if (lastBrand) {
@@ -124,6 +134,7 @@ function Game({ user, members, clickCell, lastBrand, startPlaying, gameStatus })
         fullArray.push(index);
       }
       setPoint({ ...newPoint, diffArray: fullArray });
+      endGame();
       endGameSound.play();
       resetDiff(newPoint);
       return false;
@@ -187,9 +198,12 @@ function Game({ user, members, clickCell, lastBrand, startPlaying, gameStatus })
       style={{ width: fullSize + 30, fontSize: `${fontSize}rem` }}>
       <Header headerList={headerList} size={size}
         point={point.point} user={user} members={members}
-        startPlaying={startPlaying} gameStatus={gameStatus} />
+        gameStatus={gameStatus} winer={winer} />
       <div className='board-container'>
-        {!user.isTurn && <div className='disabler'></div>}
+        {(!user.isTurn || gameStatus == 'gameEnded' || gameStatus == 'gameUI') && <div className='disabler'>
+          {(user.isHost && gameStatus == 'gameUI') && <button onClick={() => { startPlaying() }}>Start Game</button>}
+          {(user.isHost && gameStatus == 'gameEnded') && <button onClick={restartGame}>Restart Game</button>}
+        </div>}
         <Board size={size} fullSize={fullSize}
           brandsList={brandsList} cellClick={(index) => { clickCell(brandsList[index]) }}
           checkedList={checkedList} diffArray={point.diffArray} />
