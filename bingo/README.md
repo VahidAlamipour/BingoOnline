@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-This project id a online bingo.
+This project id a online bingo. I made it by react, nodejs and expressjs.
 
 ## Available Scripts
 
