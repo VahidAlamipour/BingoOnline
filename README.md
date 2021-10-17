@@ -1,5 +1,5 @@
-# Getting Started with Create React App
+# Online bingo.
 
-Online bingo. This is a training project
+This is a training project
 
 It has a complex UI and I use react hook and socket IO.
